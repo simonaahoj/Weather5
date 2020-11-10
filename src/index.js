@@ -43,6 +43,8 @@ function currentWeather(response) {
 
   let city = document.querySelector("h1");
   city.innerHTML = `${response.data.name}, ${state}`;
+
+  changeImg(description);
 }
 
 function setCityWeather() {
@@ -71,3 +73,26 @@ function getCurrentPosition() {
 }
 let buttonCurrent = document.querySelector("#current");
 buttonCurrent.addEventListener("click", getCurrentPosition);
+
+function changeImg(description) {
+  let ElementImg = document.querySelector("#weather-image");
+  ElementImg.src = "images/rain.jpg";
+  if (description === "Clouds") {
+    ElementImg.src = "images/cloudy.jpg";
+  }
+  if (description === "Rain") {
+    ElementImg.src = "images/strog-rain.jpg";
+  }
+  if (description === "Clear") {
+    ElementImg.src = "images/sunny.jpg";
+  }
+  if (description === "Drizzle") {
+    ElementImg.src = "images/rain.jpg";
+  }
+  if (description === "Showers") {
+    ElementImg.src = "images/rain.jpg";
+  }
+  if (description === "Snow") {
+    ElementImg.src = "images/snow.jpg";
+  }
+}
