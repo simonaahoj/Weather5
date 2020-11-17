@@ -47,12 +47,27 @@ function currentWeather(response) {
   changeImg(description);
 }
 
+function dispalyForcast(response) {
+  console.log(response.data.list[0])
+
+    blalba.innerHTML = /*html*/`
+      <div> A </div>
+      <h1 style="asdsda"></h1>
+    `;
+}
+
 function setCityWeather() {
   let cityName = document.querySelector("#type-city").value;
   let apiKey = "114cd41965401542304c61b473a9b798";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
 
   axios.get(`${apiUrl}`).then(currentWeather);
+ 
+  let apiUrl1 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`;
+  axios.get(`${apiUrl1}`).then(dispalyForcast);
+
+
+
 }
 
 let btSearch = document.querySelector("#search");
@@ -99,3 +114,4 @@ function changeImg(description) {
   if (description === "Mist") {
     ElementImg.src = "images/foggy.jpg";}
 }
+

@@ -26,3 +26,7 @@ form {
 #current {
   background-color: green;
 }
+
+.row {
+  margin: 10px;
+}
