@@ -96,4 +96,6 @@ function changeImg(description) {
   if (description === "Snow") {
     ElementImg.src = "images/snow.jpg";
   }
+  if (description === "Mist") {
+    ElementImg.src = "images/foggy.jpg";}
 }
