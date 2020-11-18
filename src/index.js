@@ -8,6 +8,7 @@ function formDate() {
   if (min < 10) {
     min = "0" + min;
   }
+
   let days = [
     "Sunday",
     "Monday",
@@ -17,20 +18,39 @@ function formDate() {
     "Friday",
     "Saturday",
   ];
-  let day = days[now.getDay()];
-  let newDate = document.querySelector("#dateTime");
+ let day = days[now.getDay()];
+ let newDate = document.querySelector("#dateTime");
 
-  newDate.innerHTML = `${day} ${hours}:${min}`;
+newDate.innerHTML = `${day} ${hours}:${min}`;
+
 }
 
 formDate();
 
+function forecastHours(timestamp){
+  let now = new Date(timestamp);
+  let hours = now.getHours();
+  if (hours < 10) {
+    hours = "0" + hours;
+  }
+  let min = now.getMinutes();
+  if (min < 10) {
+    min = "0" + min;
+  }
+  return `${hours}:${min}`
+}
+
 function currentWeather(response) {
+  console.log(response.data.timezone);
   let currentTemperature = Math.round(response.data.main.temp);
   let description = response.data.weather[0].main;
   let humidity = response.data.main.humidity;
   let wind = Math.round(response.data.wind.speed * 3, 6);
   let state = response.data.sys.country;
+  let sunrise = response.data.sys.sunrise;
+  let sunset = response.data.sys.sunset;
+  let timeZone = response.data.timezone;
+ 
 
   let currentTemperatureElement = document.querySelector("#temperature");
   currentTemperatureElement.innerHTML = `${currentTemperature}`;
@@ -40,23 +60,39 @@ function currentWeather(response) {
   humidityElement.innerHTML = ` ${humidity}%`;
   let windElement = document.querySelector("#wind");
   windElement.innerHTML = `${wind}`;
+  let sunriseElement = document.querySelector("#sunrise");
+  sunriseElement.innerHTML = ` ${forecastHours(sunrise * 1000)}`;
+  let sunsetElement = document.querySelector("#sunset");
+  sunsetElement.innerHTML = ` ${forecastHours(sunset * 1000)}`
+ 
 
   let city = document.querySelector("h1");
   city.innerHTML = `${response.data.name}, ${state}`;
 
-  changeImg(description);
+  let wheaterImage = document.querySelector("#weather-image");
+  wheaterImage.src = changeImg2(description);
 }
 
 function dispalyForcast(response) {
-  console.log(response.data.list[0])
+  let description = response.data.list[0].weather[0].main;
+  let forecastElement = document.querySelector("#forecast");
+  forecastElement.innerHTML = null;
+ let forecast = null;
 
-    blalba.innerHTML = /*html*/`
-      <div> A </div>
-      <h1 style="asdsda"></h1>
-    `;
+  for (let index = 0; index < 6; index++) {
+     let forecast = response.data.list[index];
+forecastElement.innerHTML +=` 
+  <div class="col-sm-2" >
+     <h5 class="card-title">${forecastHours(forecast.dt*1000)}</h5>
+     <img width="50" src="${changeImg2(description)}"/>
+      <strong >${Math.round(forecast.main.temp_max)}° ${Math.round(forecast.main.temp_min)}°</strong>                  
+  </div>`;
+  }
+
 }
 
 function setCityWeather() {
+
   let cityName = document.querySelector("#type-city").value;
   let apiKey = "114cd41965401542304c61b473a9b798";
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
@@ -90,28 +126,31 @@ function getCurrentPosition() {
 let buttonCurrent = document.querySelector("#current");
 buttonCurrent.addEventListener("click", getCurrentPosition);
 
-function changeImg(description) {
-  let ElementImg = document.querySelector("#weather-image");
-  ElementImg.src = "images/rain.jpg";
+
+function changeImg2(description) {
+
   if (description === "Clouds") {
-    ElementImg.src = "images/cloudy.jpg";
+    return "images/cloudy.jpg";
   }
   if (description === "Rain") {
-    ElementImg.src = "images/strog-rain.jpg";
+    return "images/strog-rain.jpg";
   }
   if (description === "Clear") {
-    ElementImg.src = "images/sunny.jpg";
+    return "images/sunny.jpg";
   }
   if (description === "Drizzle") {
-    ElementImg.src = "images/rain.jpg";
+    return "images/rain.jpg";
   }
   if (description === "Showers") {
-    ElementImg.src = "images/rain.jpg";
+    return "images/rain.jpg";
   }
   if (description === "Snow") {
-    ElementImg.src = "images/snow.jpg";
+    return "images/snow.jpg";
   }
   if (description === "Mist") {
-    ElementImg.src = "images/foggy.jpg";}
+    return "images/foggy.jpg";}
+  if (description === "Thunderstorm"){
+    return "images/strorm.jpg"
+  }
 }
 

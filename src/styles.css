@@ -1,5 +1,5 @@
 h1 {
-  margin-left: 42px;
+  margin-left: 65px;
   margin-top: 12px;
   margin-bottom: 0px;
   font-size: 26px;
@@ -16,7 +16,8 @@ form {
   margin-left: 42px;
 }
 .container {
-  width: 700px;
+  width: 640px;
+  margin-top: 30px;
 }
 
 .temperature {
@@ -29,4 +30,10 @@ form {
 
 .row {
   margin: 10px;
+}
+#forecast {
+  text-align: center;
+}
+#weather-info {
+  padding-inline-start: 0px;
 }
