@@ -13,7 +13,9 @@
 
 </head>
 
-<body>
+<body style=" 
+background: url(images/selectBack.jpg) no-repeat center center fixed; 
+  background-size: cover;">
     <div class="container">
         <div class="card">
             <form id="search-form">
@@ -44,15 +46,19 @@
 
                 <div class="col-sm-4">
                     <img id="weather-image" src="images/rain.jpg" alt="rain" width="120" />
-                    <strong class="temperature"> <label id="temperature">6</label><sup><small>℃ </small></sup></strong>
+                    <div class="temperature">
+                        <strong id="temperature">6</strong>
+                       <sup><a href="#" id="celsium">℃ |</a>   
+                        <a href="#" id="fahrenheit"> ℉ </a>
+                        </sup></small>
+                    </div>
                 </div>
 
                 <div class="col-sm-4" id="weather-info">
                     <ul>
                         <li>Humidity: <strong id="humidity">80%</strong></li>
                         <li>Wind: <strong id="wind"> 15 </strong> km/h </li>
-                        <li>Sunrise:<strong id="sunrise"> 06:00 </strong> </li>
-                        <li>Sunset:<strong id="sunset"> 20:00 </strong> </li>
+                       
                     </ul>
                 </div>
 

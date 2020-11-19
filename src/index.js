@@ -40,17 +40,16 @@ function forecastHours(timestamp){
   return `${hours}:${min}`
 }
 
+let currentTemperature = 0;
+
+
 function currentWeather(response) {
-  console.log(response.data.timezone);
-  let currentTemperature = Math.round(response.data.main.temp);
+  currentTemperature = Math.round(response.data.main.temp);
   let description = response.data.weather[0].main;
   let humidity = response.data.main.humidity;
   let wind = Math.round(response.data.wind.speed * 3, 6);
   let state = response.data.sys.country;
-  let sunrise = response.data.sys.sunrise;
-  let sunset = response.data.sys.sunset;
-  let timeZone = response.data.timezone;
- 
+
 
   let currentTemperatureElement = document.querySelector("#temperature");
   currentTemperatureElement.innerHTML = `${currentTemperature}`;
@@ -60,10 +59,8 @@ function currentWeather(response) {
   humidityElement.innerHTML = ` ${humidity}%`;
   let windElement = document.querySelector("#wind");
   windElement.innerHTML = `${wind}`;
-  let sunriseElement = document.querySelector("#sunrise");
-  sunriseElement.innerHTML = ` ${forecastHours(sunrise * 1000)}`;
-  let sunsetElement = document.querySelector("#sunset");
-  sunsetElement.innerHTML = ` ${forecastHours(sunset * 1000)}`
+ 
+  
  
 
   let city = document.querySelector("h1");
@@ -84,8 +81,8 @@ function dispalyForcast(response) {
 forecastElement.innerHTML +=` 
   <div class="col-sm-2" >
      <h5 class="card-title">${forecastHours(forecast.dt*1000)}</h5>
-     <img width="50" src="${changeImg2(description)}"/>
-      <strong >${Math.round(forecast.main.temp_max)}° ${Math.round(forecast.main.temp_min)}°</strong>                  
+     <img width="60" src="${changeImg2(description)}"/>
+      <strong >${Math.round(forecast.main.temp_max)}° / ${Math.round(forecast.main.temp_min)}°</strong>                  
   </div>`;
   }
 
@@ -101,8 +98,6 @@ function setCityWeather() {
  
   let apiUrl1 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=metric`;
   axios.get(`${apiUrl1}`).then(dispalyForcast);
-
-
 
 }
 
@@ -154,3 +149,19 @@ function changeImg2(description) {
   }
 }
 
+function displayCelsium() {
+   let currentTemperatureElement = document.querySelector("#temperature");
+  currentTemperatureElement.innerHTML = `${currentTemperature}`;
+
+}
+function displayFahrenheit(){
+  let temperatureElement = document.querySelector("#temperature");
+  temperature.innerHTML = Math.round((currentTemperature * 9) / 5 + 32);
+}
+
+
+let celsium = document.querySelector("#celsium")
+let fahrenheit = document.querySelector("#fahrenheit")
+
+celsium.addEventListener("click", displayCelsium)
+fahrenheit.addEventListener("click", displayFahrenheit)
