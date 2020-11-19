@@ -25,7 +25,18 @@ form {
   margin-left: 55px;
 }
 #current {
-  background-color: green;
+  background-color: #1d3a4d;
+  border-color: #99cbe8;
+}
+#search {
+  background-color: #99cbe8;
+  border-color: #1d3a4d;
+}
+#search:hover {
+  background-color: #1d3a4d;
+}
+#current:hover {
+  background-color: #99cbe8;
 }
 
 .row {

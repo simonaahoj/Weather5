@@ -147,6 +147,9 @@ function changeImg2(description) {
   if (description === "Thunderstorm"){
     return "images/strorm.jpg"
   }
+  if (description === "Fog") {
+    return "images/foggy.jpg"
+  }
 }
 
 function displayCelsium() {
