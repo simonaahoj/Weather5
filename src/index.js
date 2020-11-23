@@ -45,8 +45,8 @@ function currentWeather(response) {
   let humidity = response.data.main.humidity;
   let wind = Math.round(response.data.wind.speed * 3, 6);
   let state = response.data.sys.country;
-  let newDate = document.querySelector("#dateTime");
 
+  let newDate = document.querySelector("#dateTime");
   let currentTemperatureElement = document.querySelector("#temperature");
   currentTemperatureElement.innerHTML = `${currentTemperature}`;
   let descriptionElement = document.querySelector("#description");
@@ -56,8 +56,11 @@ function currentWeather(response) {
   let windElement = document.querySelector("#wind");
   windElement.innerHTML = `${wind}`;
   newDate.innerHTML = formatDate(new Date(), response.data.timezone);
- 
-  
+ let sunriseElement = document.querySelector("#sunrise");
+ sunriseElement.innerHTML = formatHours(response.data.sys.sunrise*1000);
+ let sunsetElement = document.querySelector("#sunset");
+ sunsetElement.innerHTML = formatHours(response.data.sys.sunset*1000);
+
  
 
   let city = document.querySelector("h1");
