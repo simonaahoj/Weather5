@@ -1,14 +1,17 @@
-function formDate() {
-  let now = new Date();
-  let hours = now.getHours();
+function formatDate(date, timezone) {
+  let localOffsetInMs = date.getTimezoneOffset() * 60 * 1000;
+  let targetOffsetInMs = timezone * 1000;
+  let targetTimestamp = date.getTime() + localOffsetInMs + targetOffsetInMs;
+  let localDate = new Date(targetTimestamp);
+  let hours = localDate.getHours();
   if (hours < 10) {
-    hours = "0" + hours;
+    hours = `0${hours}`;
   }
-  let min = now.getMinutes();
-  if (min < 10) {
-    min = "0" + min;
+  let minutes = localDate.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
   }
-
+  let dayIndex = localDate.getDay();
   let days = [
     "Sunday",
     "Monday",
@@ -16,32 +19,25 @@ function formDate() {
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday",
+    "Saturday"
   ];
- let day = days[now.getDay()];
- let newDate = document.querySelector("#dateTime");
-
-newDate.innerHTML = `${day} ${hours}:${min}`;
-
+  let day = days[dayIndex];
+  return `${day}, ${hours}:${minutes}`;
 }
-
-formDate();
-
-function forecastHours(timestamp){
-  let now = new Date(timestamp);
-  let hours = now.getHours();
+function formatHours(timestamp){
+  let date= new Date(timestamp);
+  let hours = date.getHours();
   if (hours < 10) {
-    hours = "0" + hours;
+    hours = `0${hours}`;
   }
-  let min = now.getMinutes();
-  if (min < 10) {
-    min = "0" + min;
+  let minutes = date.getMinutes();
+  if (minutes < 10) {
+    minutes= `0${minutes}`;
   }
-  return `${hours}:${min}`
+  return `${hours}:${minutes}`;
 }
 
 let currentTemperature = 0;
-
 
 function currentWeather(response) {
   currentTemperature = Math.round(response.data.main.temp);
@@ -49,7 +45,7 @@ function currentWeather(response) {
   let humidity = response.data.main.humidity;
   let wind = Math.round(response.data.wind.speed * 3, 6);
   let state = response.data.sys.country;
-
+  let newDate = document.querySelector("#dateTime");
 
   let currentTemperatureElement = document.querySelector("#temperature");
   currentTemperatureElement.innerHTML = `${currentTemperature}`;
@@ -59,6 +55,7 @@ function currentWeather(response) {
   humidityElement.innerHTML = ` ${humidity}%`;
   let windElement = document.querySelector("#wind");
   windElement.innerHTML = `${wind}`;
+  newDate.innerHTML = formatDate(new Date(), response.data.timezone);
  
   
  
@@ -80,7 +77,7 @@ function dispalyForcast(response) {
      let forecast = response.data.list[index];
 forecastElement.innerHTML +=` 
   <div class="col-sm-2" >
-     <h5 class="card-title">${forecastHours(forecast.dt*1000)}</h5>
+     <h5 class="card-title">${formatHours(forecast.dt * 1000 + (response.data.city.timezone*1000))}</h5>
      <img width="60" src="${changeImg2(description)}"/>
       <strong >${Math.round(forecast.main.temp_max)}° / ${Math.round(forecast.main.temp_min)}°</strong>                  
   </div>`;
@@ -112,7 +109,7 @@ function myLocation(position) {
   let apiUrlmyLocation = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
   axios.get(`${apiUrlmyLocation}`).then(currentWeather);
-  formDate();
+  formatDate(timestamp);
 }
 
 function getCurrentPosition() {
