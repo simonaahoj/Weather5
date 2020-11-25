@@ -25,7 +25,7 @@ function formatDate(date, timezone) {
   return `${day}, ${hours}:${minutes}`;
 }
 
-function formatHours2(date, timezone) {
+function sunriseSunsetHours(date, timezone) {
   let localOffsetInMs = date.getTimezoneOffset() * 60 * 1000;
   let targetOffsetInMs = timezone * 1000;
   let targetTimestamp = date.getTime() + localOffsetInMs + targetOffsetInMs;
@@ -72,9 +72,9 @@ function currentWeather(response) {
   windElement.innerHTML = `${wind}`;
   newDate.innerHTML = formatDate(new Date(), response.data.timezone);
   let sunriseElement = document.querySelector("#sunrise");
-  sunriseElement.innerHTML = formatHours2(new Date(response.data.sys.sunrise*1000), response.data.timezone);
+  sunriseElement.innerHTML = sunriseSunsetHours(new Date(response.data.sys.sunrise*1000), response.data.timezone);
   let sunsetElement = document.querySelector("#sunset");
-  sunsetElement.innerHTML = formatHours2(new Date(response.data.sys.sunset*1000), response.data.timezone);
+  sunsetElement.innerHTML = sunriseSunsetHours(new Date(response.data.sys.sunset*1000), response.data.timezone);
 
  
 
