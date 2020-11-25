@@ -24,6 +24,23 @@ function formatDate(date, timezone) {
   let day = days[dayIndex];
   return `${day}, ${hours}:${minutes}`;
 }
+
+function formatHours2(date, timezone) {
+  let localOffsetInMs = date.getTimezoneOffset() * 60 * 1000;
+  let targetOffsetInMs = timezone * 1000;
+  let targetTimestamp = date.getTime() + localOffsetInMs + targetOffsetInMs;
+  let localDate = new Date(targetTimestamp);
+  let hours = localDate.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  let minutes = localDate.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+  return `${hours}:${minutes}`;
+}
+
 function formatHours(timestamp){
   let date= new Date(timestamp);
   let hours = date.getHours();
@@ -36,8 +53,6 @@ function formatHours(timestamp){
   }
   return `${hours}:${minutes}`;
 }
-
-let currentTemperature = 0;
 
 function currentWeather(response) {
   currentTemperature = Math.round(response.data.main.temp);
@@ -56,10 +71,10 @@ function currentWeather(response) {
   let windElement = document.querySelector("#wind");
   windElement.innerHTML = `${wind}`;
   newDate.innerHTML = formatDate(new Date(), response.data.timezone);
- let sunriseElement = document.querySelector("#sunrise");
- sunriseElement.innerHTML = formatHours(response.data.sys.sunrise*1000);
- let sunsetElement = document.querySelector("#sunset");
- sunsetElement.innerHTML = formatHours(response.data.sys.sunset*1000);
+  let sunriseElement = document.querySelector("#sunrise");
+  sunriseElement.innerHTML = formatHours2(new Date(response.data.sys.sunrise*1000), response.data.timezone);
+  let sunsetElement = document.querySelector("#sunset");
+  sunsetElement.innerHTML = formatHours2(new Date(response.data.sys.sunset*1000), response.data.timezone);
 
  
 
@@ -70,20 +85,20 @@ function currentWeather(response) {
   wheaterImage.src = changeImg2(description);
 }
 
-function dispalyForcast(response) {
+function dispalyForcast(response, unit) {
+  savedResponse = response;
   let description = response.data.list[0].weather[0].main;
   let forecastElement = document.querySelector("#forecast");
   forecastElement.innerHTML = null;
- let forecast = null;
 
   for (let index = 0; index < 6; index++) {
-     let forecast = response.data.list[index];
-forecastElement.innerHTML +=` 
-  <div class="col-sm-2" >
-     <h5 class="card-title">${formatHours(forecast.dt * 1000 + (response.data.city.timezone*1000))}</h5>
-     <img width="60" src="${changeImg2(description)}"/>
-      <strong >${Math.round(forecast.main.temp_max)}° / ${Math.round(forecast.main.temp_min)}°</strong>                  
-  </div>`;
+     let forecast = savedResponse.data.list[index];
+     forecastElement.innerHTML +=` 
+      <div class="col-sm-2" >
+        <h5 class="card-title">${formatHours(forecast.dt * 1000 + (savedResponse.data.city.timezone*1000))}</h5>
+        <img width="60" src="${changeImg2(description)}"/>
+        <strong >${convertTemperature(forecast.main.temp_max, unit)}° / ${convertTemperature(forecast.main.temp_min, unit)}°</strong>                  
+     </div>`;
   }
 
 }
@@ -152,16 +167,33 @@ function changeImg2(description) {
   }
 }
 
-function displayCelsium() {
-   let currentTemperatureElement = document.querySelector("#temperature");
+let currentTemperature = 0;
+let savedResponse = {};
+
+function displayCelsium(event) {
+  event.preventDefault();
+  let currentTemperatureElement = document.querySelector("#temperature");
   currentTemperatureElement.innerHTML = `${currentTemperature}`;
-
+  celsium.classList.add("active");
+  fahrenheit.classList.remove("active");
+  dispalyForcast(savedResponse, "celsium");
 }
-function displayFahrenheit(){
+
+function displayFahrenheit(event){
+  event.preventDefault();
   let temperatureElement = document.querySelector("#temperature");
-  temperature.innerHTML = Math.round((currentTemperature * 9) / 5 + 32);
+  temperatureElement.innerHTML = Math.round((currentTemperature * 9) / 5 + 32);
+  celsium.classList.remove("active");
+  fahrenheit.classList.add("active");
+  dispalyForcast(savedResponse, "fahrenheit");
 }
 
+function convertTemperature(tempetrature, unit){
+  if(unit === "fahrenheit")
+    return Math.round((tempetrature * 9) / 5 + 32)
+
+  return Math.round(tempetrature)
+}
 
 let celsium = document.querySelector("#celsium")
 let fahrenheit = document.querySelector("#fahrenheit")
